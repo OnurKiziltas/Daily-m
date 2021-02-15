@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Daily\'m</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="permission_request" />
+    <string name="enable_gps" />
+    <string name="textView" />
+</resources>
