@@ -8,6 +8,7 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.onur.dailym.model.LocationModel
 
 class LocationLiveData(context: Context) : LiveData<LocationModel>() {
 
@@ -58,8 +59,8 @@ class LocationLiveData(context: Context) : LiveData<LocationModel>() {
 
     companion object {
         val locationRequest: LocationRequest = LocationRequest.create().apply {
-            interval = 10000
-            fastestInterval = 5000
+            interval = 100000
+            fastestInterval = 50000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }

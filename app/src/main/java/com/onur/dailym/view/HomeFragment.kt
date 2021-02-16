@@ -32,17 +32,22 @@ import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.location.*
 import com.onur.dailym.R
 import com.onur.dailym.Utils.GpsUtils
+import com.onur.dailym.model.WeatherModel
 import com.onur.dailym.servies.LocationLiveData
 import com.onur.dailym.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlin.io.println as println
 
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
+    lateinit var weatherModel: WeatherModel
     private var isGPSEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
        
     }
     override fun onCreateView(
@@ -53,13 +58,21 @@ class HomeFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_home, container, false)
 
 
+
+
     }
 
+    @SuppressLint("ShowToast")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
 
-        activity?.let {
+        homeViewModel.getDataFromAPI()
+
+
+
+
+       activity?.let {
             GpsUtils(it).turnGPSOn(object : GpsUtils.OnGpsListener {
 
                 override fun gpsStatus(isGPSEnable: Boolean) {
@@ -69,11 +82,13 @@ class HomeFragment : Fragment() {
         }
         activity?.let {
             homeViewModel.getLocationData().observe(it, Observer {
-                println(it.latitude)
+                textView.setText(it.latitude.toString())
                 println(it.longitude)
 
             })
         }
+
+
 
 
 
