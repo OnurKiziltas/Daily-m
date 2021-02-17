@@ -41,7 +41,6 @@ import kotlin.io.println as println
 class HomeFragment : Fragment() {
 
     private lateinit var homeViewModel: HomeViewModel
-    lateinit var weatherModel: WeatherModel
     private var isGPSEnabled = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,7 +66,7 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         homeViewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
 
-        homeViewModel.getDataFromAPI()
+
 
 
 
@@ -82,11 +81,12 @@ class HomeFragment : Fragment() {
         }
         activity?.let {
             homeViewModel.getLocationData().observe(it, Observer {
-                textView.setText(it.latitude.toString())
-                println(it.longitude)
+                homeViewModel.getDataFromAPI(it.latitude.toString(),it.longitude.toString())
 
             })
         }
+
+        writeText()
 
 
 
@@ -167,6 +167,25 @@ class HomeFragment : Fragment() {
                 invokeLocationAction()
             }
         }
+    }
+    @SuppressLint("SetTextI18n")
+    private fun writeText(){
+        homeViewModel.weather.observe(viewLifecycleOwner, Observer { weather->
+            weather?.let {
+
+                val temp: String = weather.main?.temp?.minus(273.15).toString().substring(0,4)
+                val country : String = weather.sys?.country.toString()
+                val city: String = weather.cityname
+                val feels: String = weather.main?.feels_like?.minus(273.15).toString().substring(0,4)
+                val humidity: String = weather.main?.humidity.toString()
+
+
+                textView.setText("Merhaba, Bugün Hava "+ country + " " + city +"'de" +  temp +" °C, " +" Hissedilen Sıcaklık : " +feels+" °C"+" ve Nem "+humidity )
+
+            }
+
+
+        })
     }
 }
 

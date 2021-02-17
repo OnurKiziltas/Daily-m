@@ -9,6 +9,11 @@ class WeatherModel {
 
     @SerializedName("main")
     var main: Main? = null
+
+    @SerializedName("name")
+    lateinit var cityname: String
+
+
 }
 
 
@@ -23,9 +28,12 @@ class Main {
     var temp_min: Float = 0.0f
     @SerializedName("temp_max")
     var temp_max: Float = 0.0f
+    @SerializedName("feels_like")
+    var feels_like: Float = 0.0f
 }
 
 class Sys {
     @SerializedName("country")
     var country: String? = null
 }
+
