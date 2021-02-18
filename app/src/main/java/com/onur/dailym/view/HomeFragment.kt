@@ -36,6 +36,7 @@ import com.onur.dailym.model.WeatherModel
 import com.onur.dailym.servies.LocationLiveData
 import com.onur.dailym.viewmodel.HomeViewModel
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlin.random.Random
 import kotlin.io.println as println
 
 class HomeFragment : Fragment() {
@@ -87,6 +88,8 @@ class HomeFragment : Fragment() {
         }
 
         writeText()
+
+        homeViewModel.getQuotesFromAPI()
 
 
 
@@ -180,10 +183,19 @@ class HomeFragment : Fragment() {
                 val humidity: String = weather.main?.humidity.toString()
 
 
-                textView.setText("Merhaba, Bugün Hava "+ country + " " + city +"'de" +  temp +" °C, " +" Hissedilen Sıcaklık : " +feels+" °C"+" ve Nem "+humidity )
+                textView.setText("Merhaba, Bugün Hava "+ country + " " + city +"'de" + " " + temp +" °C, " +" Hissedilen Sıcaklık : " +feels+" °C"+" ve Nem %"+humidity )
 
             }
 
+
+        })
+        homeViewModel.quotes.observe(viewLifecycleOwner,{ quotes->
+            quotes?.let {
+
+
+                val rnds = (0..quotes.size).random()
+                textView2.setText(quotes.get(rnds).text + "\n" + quotes.get(rnds).author)
+                }
 
         })
     }

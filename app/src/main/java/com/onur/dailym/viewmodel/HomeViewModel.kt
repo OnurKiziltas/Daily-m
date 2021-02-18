@@ -4,8 +4,10 @@ import android.app.Application
 import android.text.Html
 import androidx.lifecycle.MutableLiveData
 import com.onur.dailym.model.LocationModel
+import com.onur.dailym.model.QuotesModel
 import com.onur.dailym.model.WeatherModel
 import com.onur.dailym.servies.LocationLiveData
+import com.onur.dailym.servies.QuotesApiServices
 import com.onur.dailym.servies.WeatherAPI
 import com.onur.dailym.servies.WeatherApiServices
 import io.reactivex.Observable
@@ -31,11 +33,13 @@ class HomeViewModel(application : Application) : BaseViewModel(application){
     fun getLocationData() = locationData
 
     val weather = MutableLiveData<WeatherModel>()
+    val quotes = MutableLiveData<List<QuotesModel>>()
 
 
 
 
-    private val countryApiServies = WeatherApiServices()
+    private val weatherApiServices = WeatherApiServices()
+    private val quotesApiServices = QuotesApiServices()
     private val disposable = CompositeDisposable()
 
 
@@ -43,7 +47,7 @@ class HomeViewModel(application : Application) : BaseViewModel(application){
     fun getDataFromAPI(latitute:String,longitute:String){
 
         disposable.add(
-                countryApiServies.getData(latitute,longitute)
+                weatherApiServices.getData(latitute,longitute)
                         .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableSingleObserver<WeatherModel>(){
@@ -65,6 +69,28 @@ class HomeViewModel(application : Application) : BaseViewModel(application){
     override fun onCleared() {
         super.onCleared()
         disposable.clear()
+    }
+    fun getQuotesFromAPI(){
+
+        disposable.add(
+                quotesApiServices.getQuotes()
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableSingleObserver<List<QuotesModel>>(){
+                            override fun onError(e: Throwable) {
+                                println(e)
+                                e.printStackTrace()
+                            }
+
+
+                            override fun onSuccess(t: List<QuotesModel>) {
+
+                                quotes.value = t
+
+                            }
+
+                        })
+        )
     }
 
 
