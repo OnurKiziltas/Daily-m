@@ -12,4 +12,13 @@
     <color name="white">#FFFFFFFF</color>
     <color name="grey">#cacaca</color>
 
+    <color name="ColorDefaultNote">#cacaca</color>
+    <color name="ColorBlueNote">#4e33ff</color>
+    <color name="ColorYellowNote">#FFd633</color>
+    <color name="ColorWhiteNote">#FFFFFFFF</color>
+    <color name="ColorPurpleNote">#ae3b76</color>
+    <color name="ColorGreenNote">#0aebaf</color>
+    <color name="ColorOrangeNote">#ff7746</color>
+    <color name="ColorBlackNote">#10141c</color>
+
 </resources>
