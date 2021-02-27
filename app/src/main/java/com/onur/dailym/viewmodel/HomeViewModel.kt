@@ -80,12 +80,14 @@ class HomeViewModel(application : Application) : BaseViewModel(application){
                             override fun onError(e: Throwable) {
                                 println(e)
                                 e.printStackTrace()
+                                print("den")
                             }
 
 
                             override fun onSuccess(t: List<QuotesModel>) {
 
                                 quotes.value = t
+                                println(t)
 
                             }
 

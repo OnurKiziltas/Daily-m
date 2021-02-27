@@ -12,6 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
+
     </style>
     <style name="ThemeOverlay.search" parent="Theme.Dailym">
 
@@ -19,4 +20,5 @@
         <item name="android:editTextColor">@color/grey</item>
 
     </style>
+
 </resources>
