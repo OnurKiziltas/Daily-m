@@ -6,6 +6,7 @@ import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import com.onur.dailym.Utils.CustomSharedPreferences
 import com.onur.dailym.model.LocationModel
+import com.onur.dailym.model.MoneyModel
 import com.onur.dailym.model.QuotesModel
 import com.onur.dailym.model.WeatherModel
 import com.onur.dailym.servies.*
@@ -34,12 +35,14 @@ class HomeViewModel(application : Application) : BaseViewModel(application){
 
     val weather = MutableLiveData<WeatherModel>()
     val quotes = MutableLiveData<List<QuotesModel>>()
+    val money = MutableLiveData<MoneyModel>()
 
 
 
 
     private val weatherApiServices = WeatherApiServices()
     private val quotesApiServices = QuotesApiServices()
+    private val moneyApiServices = MoneyApiServices()
     private val disposable = CompositeDisposable()
 
     private var customSharedPreferences = CustomSharedPreferences(getApplication())
@@ -126,6 +129,29 @@ class HomeViewModel(application : Application) : BaseViewModel(application){
             showQuotes(list)
         }
         customSharedPreferences.saveTime(System.nanoTime())
+    }
+
+
+
+    fun getMoneyFromAPI(){
+
+        disposable.add(
+                moneyApiServices.getMoney()
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeWith(object : DisposableSingleObserver<MoneyModel>(){
+                            override fun onError(e: Throwable) {
+                                e.printStackTrace()
+                                println(e)
+                            }
+
+                            override fun onSuccess(t: MoneyModel) {
+                                money.value = t
+                                println(t.btc?.alis.toString() +" " + t.btc?.satis + " " + t.btc?.degisim + " " + t.eur?.alis + " " + t.ga?.satis )
+                            }
+
+                        })
+        )
     }
 
 

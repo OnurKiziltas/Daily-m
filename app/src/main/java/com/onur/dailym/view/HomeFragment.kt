@@ -91,7 +91,7 @@ class HomeFragment : Fragment() {
         }
 
         homeViewModel.refreshQuotes()
-
+        homeViewModel.getMoneyFromAPI()
         writeText()
 
 
