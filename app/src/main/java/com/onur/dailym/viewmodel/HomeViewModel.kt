@@ -2,20 +2,20 @@ package com.onur.dailym.viewmodel
 
 import android.app.Application
 import android.text.Html
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
+import com.onur.dailym.Utils.CustomSharedPreferences
 import com.onur.dailym.model.LocationModel
 import com.onur.dailym.model.QuotesModel
 import com.onur.dailym.model.WeatherModel
-import com.onur.dailym.servies.LocationLiveData
-import com.onur.dailym.servies.QuotesApiServices
-import com.onur.dailym.servies.WeatherAPI
-import com.onur.dailym.servies.WeatherApiServices
+import com.onur.dailym.servies.*
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.fragment_home.*
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,6 +42,9 @@ class HomeViewModel(application : Application) : BaseViewModel(application){
     private val quotesApiServices = QuotesApiServices()
     private val disposable = CompositeDisposable()
 
+    private var customSharedPreferences = CustomSharedPreferences(getApplication())
+    private var refreshTime = 12 * 60 * 60 * 1000 * 1000 * 1000L
+
 
 
     fun getDataFromAPI(latitute:String,longitute:String){
@@ -66,10 +69,26 @@ class HomeViewModel(application : Application) : BaseViewModel(application){
                         })
         )
     }
-    override fun onCleared() {
-        super.onCleared()
-        disposable.clear()
+    fun refreshQuotes(){
+
+        val updateTime = customSharedPreferences.getTime()
+        if (updateTime != null && updateTime != 0L && System.nanoTime() - updateTime < refreshTime){
+            getQuotesFromSQLite()
+        }else{
+            getQuotesFromAPI()
+        }
+
+
     }
+    fun getQuotesFromSQLite(){
+
+        launch {
+            val quotesSql = QuotesDatabase(getApplication()).QuotesDao().getQuotes()
+            showQuotes(quotesSql)
+        }
+
+    }
+
     fun getQuotesFromAPI(){
 
         disposable.add(
@@ -78,21 +97,35 @@ class HomeViewModel(application : Application) : BaseViewModel(application){
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeWith(object : DisposableSingleObserver<List<QuotesModel>>(){
                             override fun onError(e: Throwable) {
-                                println(e)
                                 e.printStackTrace()
-                                print("den")
+
                             }
 
 
                             override fun onSuccess(t: List<QuotesModel>) {
 
-                                quotes.value = t
-                                println(t)
-
+                                storeInSQLite(t)
                             }
 
                         })
         )
+    }
+    private fun showQuotes(quotesList : List<QuotesModel>){
+        quotes.value = quotesList
+    }
+    private fun storeInSQLite(list : List<QuotesModel>){
+        launch {
+            val dao = QuotesDatabase(getApplication()).QuotesDao()
+            dao.deleteQuotes()
+            val listlong = dao.insertAll(*list.toTypedArray())
+            var i = 0
+            while (i < list.size){
+                list[i].uuid = listlong[i].toInt()
+                i = i + 1
+            }
+            showQuotes(list)
+        }
+        customSharedPreferences.saveTime(System.nanoTime())
     }
 
 

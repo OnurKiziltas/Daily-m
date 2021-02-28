@@ -5,6 +5,6 @@ import io.reactivex.Single
 import retrofit2.http.GET
 
 interface QuotesAPI {
-    @GET("api/quotes")
+    @GET("api/random")
     fun getQuotes(): Single<List<QuotesModel>>
 }

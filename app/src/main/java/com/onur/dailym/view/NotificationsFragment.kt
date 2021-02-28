@@ -5,11 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProviders
 import com.onur.dailym.R
+import com.onur.dailym.viewmodel.NotificationsViewModel
 
 
 class NotificationsFragment : Fragment() {
 
+    private lateinit var notificationsViewModel: NotificationsViewModel
 
 
 
@@ -31,6 +34,7 @@ class NotificationsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        notificationsViewModel = ViewModelProviders.of(this).get(NotificationsViewModel::class.java)
 
 
     }

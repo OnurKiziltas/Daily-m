@@ -8,7 +8,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 class QuotesApiServices{
-    private val BASE_URL = "https://type.fit/"
+    private val BASE_URL = "https://zenquotes.io/"
 
     private val api = Retrofit.Builder()
             .baseUrl(BASE_URL)

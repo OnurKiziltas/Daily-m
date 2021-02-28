@@ -80,6 +80,9 @@ class HomeFragment : Fragment() {
                 }
             })
         }
+
+
+
         activity?.let {
             homeViewModel.getLocationData().observe(it, Observer {
                 homeViewModel.getDataFromAPI(it.latitude.toString(),it.longitude.toString())
@@ -87,9 +90,11 @@ class HomeFragment : Fragment() {
             })
         }
 
+        homeViewModel.refreshQuotes()
+
         writeText()
 
-        homeViewModel.getQuotesFromAPI()
+
 
 
 
@@ -192,9 +197,8 @@ class HomeFragment : Fragment() {
         homeViewModel.quotes.observe(viewLifecycleOwner,{ quotes->
             quotes?.let {
 
+                textView2.setText(quotes.get(0).quote + "\n" + quotes.get(0).author)
 
-                val rnds = (0..quotes.size).random()
-                textView2.setText(quotes.get(rnds).text + "\n" + quotes.get(rnds).author)
                 }
 
         })
